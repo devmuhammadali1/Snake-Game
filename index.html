@@ -1,0 +1,49 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snake Game</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="code.js" defer></script>
+</head>
+<body>
+    <main>
+        <div class="confirm-overlay">
+            <div class="bgc">
+            <div class="select-level">
+                <label for="select-level">Select Level:</label>
+                <select name="select" id="select-level">
+                    <option value="easy">Easy</option>
+                    <option value="medium">Medium</option>
+                    <option value="hard">Hard</option>
+                </select> 
+            </div>
+            <div class="start-game">Start Game</div>
+            <div class="restart">Restart Game</div>
+            </div>
+        </div>
+        <header>
+            <div class="high-score">High Score:<span id="high-score">0</span></div>
+            <div class="score">Score:<span id="score">0</span></div>
+            <div class="Time">Time:<span id="mins">0</span>-<span id="secs">0</span></div>
+            <img src="pause.png" alt="img" class="pause-resume">
+
+        </header>
+
+        <section>
+            <div class="board">
+             
+            </div>
+        </section>
+        <!-- Navigations for Mobile/Tablets -->
+            <div class="navigation">
+                <div class="up">⬆️</div>
+                <div class="right-left">
+                    <div class="left">⬅️</div>
+                    <div class="right">➡️</div>
+                </div>
+                <div class="down">⬇️</div>
+            </div>
+    </main>
+</body>
+</html>

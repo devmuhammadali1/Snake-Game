@@ -5,9 +5,12 @@ let board = document.querySelector(".board");
 let pauseResume = document.querySelector(".pause-resume");
 let overlay = document.querySelector(".confirm-overlay");
 let selectLevel = document.querySelector("#select-level");
+let selectLevelDiv = document.querySelector(".select-level");
 let startGame = document.querySelector(".start-game");
 let restartGame = document.querySelector(".restart");
+let resumeGame = document.querySelector(".resume");
 restartGame.style.display = "none";
+resumeGame.style.display = "none";
 let score = document.querySelector("#score");
 let mins = document.getElementById("mins");
 let secs = document.getElementById("secs");
@@ -30,29 +33,28 @@ let food = {
 let speed = 300;
 let foodCounter = 0;
 let snake = [
-  { x:Math.floor(rows/2) , y: Math.floor(cols/2-4) },
-  { x:Math.floor(rows/2) , y: Math.floor(cols/2-4)+1 },
-  { x:Math.floor(rows/2) , y: Math.floor(cols/2-4)+2 },
-
+  { x: Math.floor(rows / 2), y: Math.floor(cols / 2 - 4) },
+  { x: Math.floor(rows / 2), y: Math.floor(cols / 2 - 4) + 1 },
+  { x: Math.floor(rows / 2), y: Math.floor(cols / 2 - 4) + 2 },
 ];
 // Time
-let Time=()=>{
+let Time = () => {
   playTime = setInterval(() => {
     secsCounter += 1;
     if (secsCounter == 60) {
       minsCounter += 1;
       secsCounter = 0;
     }
-    secs.innerText = secsCounter.toString().padStart(2, '0');
-    mins.innerText = minsCounter.toString().padStart(2, '0')
+    secs.innerText = secsCounter.toString().padStart(2, "0");
+    mins.innerText = minsCounter.toString().padStart(2, "0");
   }, 1000);
-}
+};
 
 // Media Query
 function screenChange() {
   if (mediaQuery.matches) {
     navigationsMobile.style.display = "flex";
-  } 
+  }
   navigationsMobile.addEventListener("click", (e) => {
     if (snakeDirection == "right" || snakeDirection == "left") {
       if (e.target.classList.contains("up")) {
@@ -113,8 +115,8 @@ function renderSnake() {
   } else if (snakeDirection == "down") {
     snakeHead = { x: snake[0].x + 1, y: snake[0].y };
   }
-  
-  for (let i = 0; i < snake.length-2; i++) {
+
+  for (let i = 0; i < snake.length - 2; i++) {
     if (snake[i].x === snakeHead.x && snake[i].y === snakeHead.y) {
       startGame.style.display = "none";
       restartGame.style.display = "block";
@@ -144,6 +146,10 @@ function renderSnake() {
   ) {
     startGame.style.display = "none";
     restartGame.style.display = "block";
+    selectLevelDiv.style.display = "block";
+    resumeGame.style.display = "none";
+    pauseResume.src = "pause.png";
+
     overlay.style.display = "flex";
     clearInterval(intervalId);
     clearInterval(playTime);
@@ -166,7 +172,6 @@ function renderSnake() {
     localStorage.setItem("highScore", highScore);
     document.querySelector("#high-score").innerText = highScore;
   }
-
 }
 
 addEventListener("keydown", (e) => {
@@ -186,19 +191,29 @@ addEventListener("keydown", (e) => {
 });
 
 overlay.addEventListener("click", (e) => {
+  if (e.target.classList.contains("resume")) {
+    pauseResume.src = "pause.png";
+    Time();
+    intervalId = setInterval(() => {
+      renderSnake();
+    }, speed);
+    overlay.style.display = "none";
+  }
   if (e.target.classList.contains("start-game")) {
     overlay.style.display = "none";
     secsCounter = 0;
     minsCounter = 0;
-    Time()
+    Time();
     intervalId = setInterval(() => {
       renderSnake();
     }, speed);
   }
   if (e.target.classList.contains("restart")) {
+    pauseResume.src = "pause.png";
+
     secsCounter = 0;
     minsCounter = 0;
-    Time()
+    Time();
     foodCounter = 0;
     overlay.style.display = "none";
     blocksArray[food.x][food.y].classList.remove("food-fill");
@@ -207,9 +222,9 @@ overlay.addEventListener("click", (e) => {
       blocksArray[coordinate.x][coordinate.y].classList.remove("fill");
     });
     snake = [
-      { x:Math.floor(rows/2) , y: Math.floor(cols/2-6) },
-      { x:Math.floor(rows/2) , y: Math.floor(cols/2-6)+1 },
-      { x:Math.floor(rows/2) , y: Math.floor(cols/2-6)+2 },
+      { x: Math.floor(rows / 2), y: Math.floor(cols / 2 - 6) },
+      { x: Math.floor(rows / 2), y: Math.floor(cols / 2 - 6) + 1 },
+      { x: Math.floor(rows / 2), y: Math.floor(cols / 2 - 6) + 2 },
     ];
     snakeDirection = "right";
     food = {
@@ -221,16 +236,15 @@ overlay.addEventListener("click", (e) => {
     }, speed);
   }
 });
-pauseResume.addEventListener("click", () => {
-  if (pauseResume.getAttribute("src") === "pause.png") {
+pauseResume.addEventListener("click", (e) => {
+  if (pauseResume.getAttribute("src") == "pause.png") {
+    overlay.style.display = "flex";
+    restartGame.style.display = "block";
+    resumeGame.style.display = "block";
+    selectLevelDiv.style.display = "none";
+    startGame.style.display = "none";
     clearInterval(intervalId);
     clearInterval(playTime);
     pauseResume.src = "play-button.png";
-  } else if (pauseResume.getAttribute("src") == "play-button.png") {
-    pauseResume.src = "pause.png";
-    Time()
-    intervalId = setInterval(() => {
-      renderSnake();
-    }, speed);
   }
 });
